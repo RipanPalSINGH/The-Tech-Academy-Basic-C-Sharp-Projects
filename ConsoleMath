@@ -1,0 +1,42 @@
+using System;
+
+namespace MathOperationApp
+{
+    // Define a class named MathOperations
+    class MathOperations
+    {
+        // This void method takes two integers as parameters
+        // It performs a math operation on the first integer (e.g., doubles it)
+        // Then it displays the second integer to the console
+        public void ProcessNumbers(int firstNumber, int secondNumber)
+        {
+            // Perform a math operation on firstNumber (multiply by 2)
+            int result = firstNumber * 2;
+
+            // Display the result of the math operation on firstNumber
+            Console.WriteLine("Result of math operation on first number: " + result);
+
+            // Display the second number as received
+            Console.WriteLine("Second number displayed: " + secondNumber);
+        }
+    }
+
+    class Program
+    {
+        // Main entry point of the console application
+        static void Main(string[] args)
+        {
+            // Instantiate the MathOperations class to create an object named mathOps
+            MathOperations mathOps = new MathOperations();
+
+            // Call the ProcessNumbers method using positional parameters (passing 5 and 10)
+            mathOps.ProcessNumbers(5, 10);
+
+            // Call the ProcessNumbers method using named parameters (passing secondNumber first)
+            mathOps.ProcessNumbers(secondNumber: 20, firstNumber: 7);
+
+            // Wait for the user to press a key before closing the console window
+            Console.ReadKey();
+        }
+    }
+}
