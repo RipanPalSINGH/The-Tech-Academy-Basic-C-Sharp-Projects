@@ -1,0 +1,41 @@
+using System;
+
+// Define an interface named IQuittable
+public interface IQuittable
+{
+    // Declare a method signature for Quit with no return type
+    void Quit();
+}
+
+// Define an Employee class that implements the IQuittable interface
+public class Employee : IQuittable
+{
+    // Properties for first and last name of the employee
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+
+    // Implement the Quit method from the IQuittable interface
+    public void Quit()
+    {
+        // Output a message indicating the employee has quit
+        Console.WriteLine($"{FirstName} {LastName} has quit the job.");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Create a new Employee object and assign first and last names
+        Employee emp = new Employee() { FirstName = "John", LastName = "Doe" };
+
+        // Use polymorphism: create an object of type IQuittable
+        IQuittable quittable = emp;
+
+        // Call the Quit method using the interface reference
+        quittable.Quit();
+
+        // Wait for user input before closing the console window
+        Console.ReadLine();
+    }
+}
