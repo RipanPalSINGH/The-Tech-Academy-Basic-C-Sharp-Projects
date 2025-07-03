@@ -1,0 +1,96 @@
+using System;
+
+namespace EmployeeComparisonApp
+{
+    // Employee class definition
+    public class Employee
+    {
+        // Property to hold Employee ID
+        public int Id { get; set; }
+
+        // Property to hold Employee's First Name
+        public string FirstName { get; set; }
+
+        // Property to hold Employee's Last Name
+        public string LastName { get; set; }
+
+        // Overload the '==' operator to compare two Employee objects by Id
+        public static bool operator ==(Employee emp1, Employee emp2)
+        {
+            // If both are the same reference, they are equal
+            if (ReferenceEquals(emp1, emp2))
+                return true;
+
+            // If either is null, they are not equal
+            if (emp1 is null || emp2 is null)
+                return false;
+
+            // Return true if Ids match
+            return emp1.Id == emp2.Id;
+        }
+
+        // Overload the '!=' operator as the inverse of '=='
+        public static bool operator !=(Employee emp1, Employee emp2)
+        {
+            return !(emp1 == emp2);
+        }
+
+        // Override Equals to align with '==' operator logic
+        public override bool Equals(object obj)
+        {
+            return this == obj as Employee;
+        }
+
+        // Override GetHashCode since Equals is overridden
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        // Method to return the full name of the employee
+        public string FullName()
+        {
+            return $"{FirstName} {LastName}";
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Create the first Employee object
+            Employee employee1 = new Employee
+            {
+                Id = 101,
+                FirstName = "Alice",
+                LastName = "Smith"
+            };
+
+            // Create the second Employee object with the same Id but different name
+            Employee employee2 = new Employee
+            {
+                Id = 101,
+                FirstName = "Bob",
+                LastName = "Johnson"
+            };
+
+            // Display full names of both employees
+            Console.WriteLine($"Employee 1: {employee1.FullName()} (ID: {employee1.Id})");
+            Console.WriteLine($"Employee 2: {employee2.FullName()} (ID: {employee2.Id})");
+
+            // Compare both employees using overloaded '=='
+            if (employee1 == employee2)
+            {
+                Console.WriteLine("Result: Both employees are considered equal because their IDs match.");
+            }
+            else
+            {
+                Console.WriteLine("Result: Employees are not equal.");
+            }
+
+            // Keep the console window open until a key is pressed
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
+        }
+    }
+}
