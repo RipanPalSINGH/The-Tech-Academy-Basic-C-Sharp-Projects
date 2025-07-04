@@ -1,0 +1,168 @@
+ using System;
+using System.Collections.Generic;
+
+namespace SimpleTwentyOne
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Welcome to Simple TwentyOne (Blackjack)!");
+            Deck deck = new Deck();
+            deck.Shuffle();
+
+            List<Card> playerHand = new List<Card>();
+            List<Card> dealerHand = new List<Card>();
+
+            // Initial Deal
+            playerHand.Add(deck.DrawCard());
+            playerHand.Add(deck.DrawCard());
+            dealerHand.Add(deck.DrawCard());
+
+            bool playerTurn = true;
+            while (playerTurn)
+            {
+                Console.WriteLine("\nYour hand:");
+                PrintHand(playerHand);
+                int playerScore = CalculateScore(playerHand);
+                Console.WriteLine($"Your score: {playerScore}");
+
+                if (playerScore > 21)
+                {
+                    Console.WriteLine("You busted! Dealer wins.");
+                    return;
+                }
+
+                Console.Write("Do you want to Hit or Stand? ");
+                string choice = Console.ReadLine().ToLower();
+
+                if (choice == "hit")
+                {
+                    playerHand.Add(deck.DrawCard());
+                }
+                else if (choice == "stand")
+                {
+                    playerTurn = false;
+                }
+                else
+                {
+                    Console.WriteLine("Please enter 'Hit' or 'Stand'.");
+                }
+            }
+
+            // Dealer's Turn
+            Console.WriteLine("\nDealer's turn...");
+            dealerHand.Add(deck.DrawCard());
+            while (CalculateScore(dealerHand) < 17)
+            {
+                dealerHand.Add(deck.DrawCard());
+            }
+
+            int dealerScoreFinal = CalculateScore(dealerHand);
+            Console.WriteLine("Dealer's hand:");
+            PrintHand(dealerHand);
+            Console.WriteLine($"Dealer's score: {dealerScoreFinal}");
+
+            int finalPlayerScore = CalculateScore(playerHand);
+
+            // Final Result
+            if (dealerScoreFinal > 21 || finalPlayerScore > dealerScoreFinal)
+            {
+                Console.WriteLine("You win!");
+            }
+            else if (finalPlayerScore == dealerScoreFinal)
+            {
+                Console.WriteLine("It's a tie!");
+            }
+            else
+            {
+                Console.WriteLine("Dealer wins!");
+            }
+        }
+
+        static void PrintHand(List<Card> hand)
+        {
+            foreach (Card card in hand)
+            {
+                Console.WriteLine($"{card.Value} of {card.Suit}");
+            }
+        }
+
+        static int CalculateScore(List<Card> hand)
+        {
+            int score = 0;
+            int aceCount = 0;
+
+            foreach (var card in hand)
+            {
+                if (int.TryParse(card.Value, out int val))
+                {
+                    score += val;
+                }
+                else if (card.Value == "Ace")
+                {
+                    score += 11;
+                    aceCount++;
+                }
+                else
+                {
+                    score += 10;
+                }
+            }
+
+            // Adjust for Aces
+            while (score > 21 && aceCount > 0)
+            {
+                score -= 10;
+                aceCount--;
+            }
+
+            return score;
+        }
+    }
+
+    class Card
+    {
+        public string Suit { get; set; }
+        public string Value { get; set; }
+    }
+
+    class Deck
+    {
+        private List<Card> cards;
+        private Random rng = new Random();
+
+        public Deck()
+        {
+            cards = new List<Card>();
+            string[] suits = { "Hearts", "Diamonds", "Clubs", "Spades" };
+            string[] values = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
+
+            foreach (var suit in suits)
+            {
+                foreach (var value in values)
+                {
+                    cards.Add(new Card { Suit = suit, Value = value });
+                }
+            }
+        }
+
+        public void Shuffle()
+        {
+            for (int i = cards.Count - 1; i > 0; i--)
+            {
+                int j = rng.Next(i + 1);
+                var temp = cards[i];
+                cards[i] = cards[j];
+                cards[j] = temp;
+            }
+        }
+
+       public Card DrawCard()
+        {
+            Card drawnCard = cards[0];
+            cards.RemoveAt(0);
+            return drawnCard;
+        }
+    }
+}
